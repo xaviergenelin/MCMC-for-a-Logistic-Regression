@@ -1,3 +1,7 @@
 # MCMC for a Logistic Regression
  
-This purpose of this project was to create a MCMC sampler for a logistic regression. 
+This purpose of this project was to create a MCMC sampler for a logistic regression. It looks at the probability of making a field goal using NFL kick data and creating a model for whether the kick will be successful or not. The model uses the distance of the kick to help determine the probability of making it, p(xi) = B0 + B1*xi for an observed xi distance. We'll use a transformed version of p(xi), a logit transform, to keep the predictions between 0 and 1, log(p(xi)/(1-p(xi))). This equation can also be written as the expit which is what we'll use, expit(B0 + B1*xi) = exp(B0 + B1*xi)/(1+exp(B0 + B1*xi)) = 1/(1+exp(-B0 - B1*xi)). From this equation, we'll predicted a made field goal when p >= 0.5 and a miss when p < 0.5.
+
+For the MCMC sampling, we want to get a posterior distribution for the parameters B0 and B1 by specifying a prior on (B0, B1). We will assume B0 ~ N(0, 15^2) and B1 ~ N(0, 15^2) as our prior distributions where B0 and B1 are independent. The posterior for each iteration will use the equation R = candidate posterior / current posterior and have that R value be compared to a log of a Uniform(0,1) value. We accept this new posterior if ln(U) < ln(R). We'll do this 100,000 times and use a burn-in of 10,000. 
+
+Once we have the posterior distribution for the parameters, we'll examine the posterior means and standard deviations as well as 95% credible intervals for B0 and B1 after using the burn-in. These values will be comapred to the maximum likelihood model to see how the MCMC sampling compared. 
